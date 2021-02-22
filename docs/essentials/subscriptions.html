@@ -1,0 +1,103 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Subscription · sofa</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="Sofa enables you to run GraphQL Subscriptions through WebHooks. It has a special API to start, update, and stop a subscription."/><meta name="docsearch:language" content="en"/><meta property="og:title" content="Subscription · sofa"/><meta property="og:type" content="website"/><meta property="og:url" content="https://sofa-api.com/"/><meta property="og:description" content="Sofa enables you to run GraphQL Subscriptions through WebHooks. It has a special API to start, update, and stop a subscription."/><meta property="og:image" content="https://sofa-api.com/img/og-image.jpg"/><meta name="twitter:card" content="summary"/><meta name="twitter:image" content="https://sofa-api.com/img/og-image.jpg"/><link rel="shortcut icon" href="/img/favicon/favicon.png"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script src="/js/scrollSpy.js"></script><link rel="stylesheet" href="/css/main.css"/><script src="/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/"><img class="logo" src="/img/sofa-dark.svg" alt="sofa"/><h2 class="headerTitleWithLogo">sofa</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class="siteNavGroupActive"><a href="/docs/" target="_self">Documentation</a></li><li class=""><a href="https://github.com/urigo/sofa" target="_self">Github</a></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="docsNavContainer" id="docsNav"><nav class="toc"><div class="toggleNav"><section class="navWrapper wrapper"><div class="navBreadcrumb wrapper"><div class="navToggle" id="navToggler"><div class="hamburger-menu"><div class="line1"></div><div class="line2"></div><div class="line3"></div></div></div><h2><i>›</i><span>Essentials</span></h2><div class="tocToggler" id="tocToggler"><i class="icon-toc"></i></div></div><div class="navGroups"><div class="navGroup"><h3 class="navGroupCategoryTitle">Introduction</h3><ul class=""><li class="navListItem"><a class="navItem" href="/docs/">Getting Started</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">Essentials</h3><ul class=""><li class="navListItem"><a class="navItem" href="/docs/essentials/queries">Queries</a></li><li class="navListItem"><a class="navItem" href="/docs/essentials/mutations">Mutations</a></li><li class="navListItem navListItemActive"><a class="navItem" href="/docs/essentials/subscriptions">Subscription</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">Recipes</h3><ul class=""><li class="navListItem"><a class="navItem" href="/docs/recipes/open-api">OpenAPI (Swagger)</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">API</h3><ul class=""><li class="navListItem"><a class="navItem" href="/docs/api/models">Nested data and Models</a></li><li class="navListItem"><a class="navItem" href="/docs/api/context">Using context</a></li><li class="navListItem"><a class="navItem" href="/docs/api/ignore">Using objects instead of IDs</a></li><li class="navListItem"><a class="navItem" href="/docs/api/execute">Custom execute phase</a></li><li class="navListItem"><a class="navItem" href="/docs/api/error-handler">Error Handling</a></li><li class="navListItem"><a class="navItem" href="/docs/api/method">Customize endpoint&#x27;s HTTP Method</a></li></ul></div></div></section></div><script>
+            var coll = document.getElementsByClassName('collapsible');
+            var checkActiveCategory = true;
+            for (var i = 0; i < coll.length; i++) {
+              var links = coll[i].nextElementSibling.getElementsByTagName('*');
+              if (checkActiveCategory){
+                for (var j = 0; j < links.length; j++) {
+                  if (links[j].classList.contains('navListItemActive')){
+                    coll[i].nextElementSibling.classList.toggle('hide');
+                    coll[i].childNodes[1].classList.toggle('rotate');
+                    checkActiveCategory = false;
+                    break;
+                  }
+                }
+              }
+
+              coll[i].addEventListener('click', function() {
+                var arrow = this.childNodes[1];
+                arrow.classList.toggle('rotate');
+                var content = this.nextElementSibling;
+                content.classList.toggle('hide');
+              });
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+              createToggler('#navToggler', '#docsNav', 'docsSliderActive');
+              createToggler('#tocToggler', 'body', 'tocActive');
+
+              var headings = document.querySelector('.toc-headings');
+              headings && headings.addEventListener('click', function(event) {
+                var el = event.target;
+                while(el !== headings){
+                  if (el.tagName === 'A') {
+                    document.body.classList.remove('tocActive');
+                    break;
+                  } else{
+                    el = el.parentNode;
+                  }
+                }
+              }, false);
+
+              function createToggler(togglerSelector, targetSelector, className) {
+                var toggler = document.querySelector(togglerSelector);
+                var target = document.querySelector(targetSelector);
+
+                if (!toggler) {
+                  return;
+                }
+
+                toggler.onclick = function(event) {
+                  event.preventDefault();
+
+                  target.classList.toggle(className);
+                };
+              }
+            });
+        </script></nav></div><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">Subscription</h1></header><article><div><span><p>Sofa enables you to run GraphQL Subscriptions through WebHooks. It has a special API to start, update, and stop a subscription.</p>
+<ul>
+<li><code>POST /webhook</code> - starts a subscription</li>
+<li><code>DELETE /webhook/:id</code> - stops it</li>
+<li><code>POST /webhook/:id</code>- updates it</li>
+</ul>
+<h4><a class="anchor" aria-hidden="true" id="starting-a-subscription"></a><a href="#starting-a-subscription" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Starting a subscription</h4>
+<p>To start a new subscription you need to include following data in request's body:</p>
+<ul>
+<li><code>subscription</code> - subscription's name, matches the name in GraphQL Schema</li>
+<li><code>variables</code> - variables passed to run a subscription (optional)</li>
+<li><code>url</code> - an url of your webhook receiving endpoint</li>
+</ul>
+<p>After sending it to <code>POST /webhook</code> you're going to get in return a unique ID that is your started subscription's identifier.</p>
+<pre><code class="hljs css language-json">{
+  <span class="hljs-attr">"id"</span>: <span class="hljs-string">"SUBSCRIPTION-UNIQUE-ID"</span>
+}
+</code></pre>
+<h4><a class="anchor" aria-hidden="true" id="stoping-a-subscription"></a><a href="#stoping-a-subscription" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Stoping a subscription</h4>
+<p>In order to stop a subscription, you need to pass its id and hit <code>DELETE /webhook/:id</code>.</p>
+<h4><a class="anchor" aria-hidden="true" id="updating-a-subscription"></a><a href="#updating-a-subscription" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Updating a subscription</h4>
+<p>Updating a subscription looks very similar to how you start one. Your request's body should contain:</p>
+<ul>
+<li><code>variables</code> - variables passed to run a subscription (optional)</li>
+</ul>
+<p>After sending it to <code>POST /webhook/:id</code> you're going to get in return a new ID:</p>
+<pre><code class="hljs css language-json">{
+  <span class="hljs-attr">"id"</span>: <span class="hljs-string">"SUBSCRIPTION-UNIQUE-ID"</span>
+}
+</code></pre>
+<h4><a class="anchor" aria-hidden="true" id="example"></a><a href="#example" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Example</h4>
+<p>Given the following schema:</p>
+<pre><code class="hljs css language-graphql"><span class="hljs-selector-tag">type</span> <span class="hljs-selector-tag">Subscription</span> {
+  <span class="hljs-attribute">onBook</span>: Book
+}
+</code></pre>
+<p>Let's start a subscription by sending that to <code>POST /webhook</code>:</p>
+<pre><code class="hljs css language-json">{
+  <span class="hljs-attr">"subscription"</span>: <span class="hljs-string">"onBook"</span>,
+  <span class="hljs-attr">"variables"</span>: {},
+  <span class="hljs-attr">"url"</span>: <span class="hljs-string">"https://app.com/new-book"</span>
+}
+</code></pre>
+<p>In return we get an <code>id</code> that we later on use to stop or update subscription:</p>
+<pre><code class="hljs">DELETE /webhook/:id
+</code></pre>
+</span></div></article></div><div class="docLastUpdate"><em>Last updated on 2/22/2021 by Arda TANRIKULU</em></div><div class="docs-prevnext"><a class="docs-prev button" href="/docs/essentials/mutations"><span class="arrow-prev">← </span><span>Mutations</span></a><a class="docs-next button" href="/docs/recipes/open-api"><span class="function-name-prevnext">OpenAPI (Swagger)</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"></nav></div><footer id="footer"><div class="footer-container"><div class="footer-logo"><a href="/"><img src="/img/sofa-gray.svg" alt="sofa"/></a></div><div class="links"><a href="https://twitter.com/UriGoldshtein" target="_blank" rel="noreferrer noopener">Twitter</a><span class="footer-link-separator">·</span><a href="https://medium.com/the-guild">Medium</a><span class="footer-link-separator">·</span><a href="https://github.com/Urigo/sofa">Github</a></div><div class="copyrights">Copyright © 2021 The Guild</div></div></footer></div></body></html>

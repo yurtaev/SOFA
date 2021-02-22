@@ -1,0 +1,72 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Nested data and Models · sofa</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="Sofa treats some types differently than others, those are called Models."/><meta name="docsearch:language" content="en"/><meta property="og:title" content="Nested data and Models · sofa"/><meta property="og:type" content="website"/><meta property="og:url" content="https://sofa-api.com/"/><meta property="og:description" content="Sofa treats some types differently than others, those are called Models."/><meta property="og:image" content="https://sofa-api.com/img/og-image.jpg"/><meta name="twitter:card" content="summary"/><meta name="twitter:image" content="https://sofa-api.com/img/og-image.jpg"/><link rel="shortcut icon" href="/img/favicon/favicon.png"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script src="/js/scrollSpy.js"></script><link rel="stylesheet" href="/css/main.css"/><script src="/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/"><img class="logo" src="/img/sofa-dark.svg" alt="sofa"/><h2 class="headerTitleWithLogo">sofa</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class="siteNavGroupActive"><a href="/docs/" target="_self">Documentation</a></li><li class=""><a href="https://github.com/urigo/sofa" target="_self">Github</a></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="docsNavContainer" id="docsNav"><nav class="toc"><div class="toggleNav"><section class="navWrapper wrapper"><div class="navBreadcrumb wrapper"><div class="navToggle" id="navToggler"><div class="hamburger-menu"><div class="line1"></div><div class="line2"></div><div class="line3"></div></div></div><h2><i>›</i><span>API</span></h2><div class="tocToggler" id="tocToggler"><i class="icon-toc"></i></div></div><div class="navGroups"><div class="navGroup"><h3 class="navGroupCategoryTitle">Introduction</h3><ul class=""><li class="navListItem"><a class="navItem" href="/docs/">Getting Started</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">Essentials</h3><ul class=""><li class="navListItem"><a class="navItem" href="/docs/essentials/queries">Queries</a></li><li class="navListItem"><a class="navItem" href="/docs/essentials/mutations">Mutations</a></li><li class="navListItem"><a class="navItem" href="/docs/essentials/subscriptions">Subscription</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">Recipes</h3><ul class=""><li class="navListItem"><a class="navItem" href="/docs/recipes/open-api">OpenAPI (Swagger)</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">API</h3><ul class=""><li class="navListItem navListItemActive"><a class="navItem" href="/docs/api/models">Nested data and Models</a></li><li class="navListItem"><a class="navItem" href="/docs/api/context">Using context</a></li><li class="navListItem"><a class="navItem" href="/docs/api/ignore">Using objects instead of IDs</a></li><li class="navListItem"><a class="navItem" href="/docs/api/execute">Custom execute phase</a></li><li class="navListItem"><a class="navItem" href="/docs/api/error-handler">Error Handling</a></li><li class="navListItem"><a class="navItem" href="/docs/api/method">Customize endpoint&#x27;s HTTP Method</a></li></ul></div></div></section></div><script>
+            var coll = document.getElementsByClassName('collapsible');
+            var checkActiveCategory = true;
+            for (var i = 0; i < coll.length; i++) {
+              var links = coll[i].nextElementSibling.getElementsByTagName('*');
+              if (checkActiveCategory){
+                for (var j = 0; j < links.length; j++) {
+                  if (links[j].classList.contains('navListItemActive')){
+                    coll[i].nextElementSibling.classList.toggle('hide');
+                    coll[i].childNodes[1].classList.toggle('rotate');
+                    checkActiveCategory = false;
+                    break;
+                  }
+                }
+              }
+
+              coll[i].addEventListener('click', function() {
+                var arrow = this.childNodes[1];
+                arrow.classList.toggle('rotate');
+                var content = this.nextElementSibling;
+                content.classList.toggle('hide');
+              });
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+              createToggler('#navToggler', '#docsNav', 'docsSliderActive');
+              createToggler('#tocToggler', 'body', 'tocActive');
+
+              var headings = document.querySelector('.toc-headings');
+              headings && headings.addEventListener('click', function(event) {
+                var el = event.target;
+                while(el !== headings){
+                  if (el.tagName === 'A') {
+                    document.body.classList.remove('tocActive');
+                    break;
+                  } else{
+                    el = el.parentNode;
+                  }
+                }
+              }, false);
+
+              function createToggler(togglerSelector, targetSelector, className) {
+                var toggler = document.querySelector(togglerSelector);
+                var target = document.querySelector(targetSelector);
+
+                if (!toggler) {
+                  return;
+                }
+
+                toggler.onclick = function(event) {
+                  event.preventDefault();
+
+                  target.classList.toggle(className);
+                };
+              }
+            });
+        </script></nav></div><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">Nested data and Models</h1></header><article><div><span><p>Sofa treats some types differently than others, those are called Models.</p>
+<p>The idea behind Models is to not expose full objects in every response, especially if it's a nested, not first-level data.</p>
+<p>For example, when fetching a list of chats you don't want to include all messages in the response, you want them to be just IDs (or links). Those messages would have to have their own endpoint. We call this type of data, a Model. In REST you probably call them Resources.</p>
+<p>In order to treat particular types as Models you need to provide two queries, one that exposes a list (with no non-optional arguments) and the other to fetch a single entity (id field as an argument). The model itself has to have an id field. Those are the only requirements.</p>
+<pre><code class="hljs css language-graphql"><span class="hljs-comment"># Message is treated as a Model</span><span class="hljs-built_in">
+type </span>Query {
+  messages: [Message]
+  message(id: ID): Message
+}
+<span class="hljs-built_in">
+type </span>Message {
+  id: ID
+  # other fields <span class="hljs-built_in">..</span>.
+}
+</code></pre>
+</span></div></article></div><div class="docLastUpdate"><em>Last updated on 2/22/2021 by Arda TANRIKULU</em></div><div class="docs-prevnext"><a class="docs-prev button" href="/docs/recipes/open-api"><span class="arrow-prev">← </span><span class="function-name-prevnext">OpenAPI (Swagger)</span></a><a class="docs-next button" href="/docs/api/context"><span>Using context</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"></nav></div><footer id="footer"><div class="footer-container"><div class="footer-logo"><a href="/"><img src="/img/sofa-gray.svg" alt="sofa"/></a></div><div class="links"><a href="https://twitter.com/UriGoldshtein" target="_blank" rel="noreferrer noopener">Twitter</a><span class="footer-link-separator">·</span><a href="https://medium.com/the-guild">Medium</a><span class="footer-link-separator">·</span><a href="https://github.com/Urigo/sofa">Github</a></div><div class="copyrights">Copyright © 2021 The Guild</div></div></footer></div></body></html>
